@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: paymentsflow
+
+  # Default (dev/test) datasource: H2 in-memory, running in PostgreSQL
+  # compatibility mode so behaviour is close to the production database.
+  datasource:
+    url: jdbc:h2:mem:paymentsflow;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      # Hibernate owns the schema for dev/test, so the suite needs no Flyway.
+      ddl-auto: create-drop
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Flyway is off by default; the `postgres` profile turns it on for production.
+  flyway:
+    enabled: false
+
+  h2:
+    console:
+      enabled: false
+
+# Transfer retry budget for optimistic-lock conflicts before returning 409.
+paymentsflow:
+  transfer:
+    max-retries: 8
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: paymentsflow
+    description: Payments and double-entry ledger REST microservice
+    java: "21"
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.angelo.paymentsflow: INFO
