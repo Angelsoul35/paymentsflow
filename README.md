@@ -230,4 +230,4 @@ exact money, idempotency, and safe concurrency.
 
 ## License
 
-MIT. See [LICENSE](LICENSE). Copyright (c) 2026 Angelo David Padilla Romero.
+[MIT](LICENSE) © Angelo David Padilla Romero
