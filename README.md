@@ -7,6 +7,13 @@ is stored as integer **minor units** (never floating point), transfers are
 **optimistic locking**. Spring Boot 3, Java 21, PostgreSQL in production and H2
 in tests.
 
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)](.github/workflows/ci.yml)
+[![Java](https://img.shields.io/badge/java-21-blue)](pom.xml)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-brightgreen)](pom.xml)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+---
+
 ## Why it matters
 
 Most "move money from A to B" services treat a balance as a number they increment
