@@ -51,7 +51,7 @@ contra el mismo par de cuentas y comprueba que:
 - el saldo final es exactamente el de una ejecución secuencial, y
 - los dos saldos siguen sumando el total financiado (no se perdió nada).
 
-## El compromiso honesto
+## El límite medible del enfoque
 
 Bajo mucha contención sobre la **misma** cuenta, los reintentos añaden latencia y un
 punto caliente persistente puede agotar el presupuesto y devolver 409. Es el precio

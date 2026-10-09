@@ -30,7 +30,8 @@ transaction.
   the cost, so throughput stays high compared with a pessimistic lock on every
   transfer.
 - Under heavy contention on the *same* account, retries add latency and a persistent
-  hotspot can still exhaust the budget and return 409. That is the honest trade-off;
-  a workload with such hotspots might shard the hot account or batch its postings.
+  hotspot can still exhaust the budget and return 409. That is the measurable cost of
+  the approach; a workload with such hotspots might shard the hot account or batch its
+  postings.
 - Because all transfers lock accounts in the same order (source then destination
   within one flush), this design does not introduce lock-ordering deadlocks.

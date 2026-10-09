@@ -212,6 +212,54 @@ optimistic locking, the validation and problem-response paths, and an actuator
 health check. It uses H2 in-memory and needs no external services; Postgres and
 Flyway are never exercised by the tests.
 
+## Real-inputs benchmark
+
+The engine is not only exercised on hand-written fixtures: it is run end to end
+over **real transactions** and validated against reference totals computed
+independently. The benchmark feeds a vendored snapshot of the UCI *Online Retail*
+dataset — the real 2010–2011 transactions of a UK online retailer — through the
+same `AccountService` and `TransferService` beans the REST API uses, and reads
+back the ledger the engine produced.
+
+```bash
+mvn test -Dtest=RealInputsLedgerBenchmarkTest   # runs the benchmark and prints the report
+```
+
+The dataset maps onto double-entry as a **sales ledger**: one credit-normal
+`revenue:sales` (INCOME) account and one debit-normal receivable (ASSET) account
+per customer. Each invoice becomes one balanced journal entry — a sale
+(`transfer(revenue → customer)`) or, for a credit note, a return
+(`transfer(customer → revenue)`). Sterling prices are converted to **exact pence**
+with integer arithmetic, matching the engine's minor-unit model.
+
+Over the snapshot (1,989 real line items → 89 balanced entries across 71
+customers) the benchmark asserts, to the penny, that the engine reproduces
+independently-pinned reference values and holds the ledger invariants:
+
+| Check                                        | Value / result |
+| -------------------------------------------- | -------------- |
+| Every journal entry balanced (`debits == credits`) | 89 / 89 |
+| Revenue — net sales                          | £32,226.93 (3,222,693 pence) |
+| Sum of customer receivables                  | £32,226.93 — equals revenue |
+| Whole-ledger trial balance (assets − credits) | **0** (conservation) |
+| Gross turnover (Σ entry debits = Σ credits)  | £32,877.39 (3,287,739 pence) |
+| Idempotent replay of the same batch          | 0 new entries, balances unchanged |
+
+Three **tamper controls** then prove the checks have teeth: dropping a leg from a
+real posting makes the entry unbalanced (rejected), scrambling one invoice amount
+breaks the reconciliation against the pinned reference, and a single one-sided
+posting drives the trial balance off zero.
+
+- Snapshot, source, license (CC BY 4.0) and regeneration: [`src/test/resources/realdata/online-retail/README.md`](src/test/resources/realdata/online-retail/README.md).
+- A step-by-step study of the invariants, the formulas and a worked numeric
+  example on the real numbers: [`docs/estudio/06-datos-reales-y-validacion.md`](docs/estudio/06-datos-reales-y-validacion.md).
+
+**Extending it.** The same harness scales directly: point the loader at the full
+541,909-row dataset for a larger run; add a settlement/clearing account and net
+customer receivables against cash to validate netting totals; or swap in a second
+real feed (e.g. multi-currency invoices) to drive an FX extension. The engine and
+the invariant checks stay exactly as they are — only the inputs grow.
+
 ## Documentation
 
 - `docs/architecture.md` — components, request flow, and layering.

@@ -17,6 +17,10 @@ decisión.
    Cómo `@Version` evita que dos transferencias se pisen el saldo.
 5. [05 — Preguntas de entrevista](05-preguntas-de-entrevista.md)
    Preguntas típicas y cómo responderlas con este proyecto.
+6. [06 — Datos reales y validación del motor](06-datos-reales-y-validacion.md)
+   Transacciones reales a través del motor, las invariantes con fórmulas, un
+   ejemplo numérico con los números reales, la recomputación independiente, el
+   control de manipulación y el veredicto.
 
 ## La idea en una frase
 
